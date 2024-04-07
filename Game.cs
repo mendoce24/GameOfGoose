@@ -1,7 +1,6 @@
 ﻿using GameOfGoose.Board;
 using GameOfGoose.Print;
-using System.Numerics;
-using System;
+using GameOfGoose.Rules;
 
 namespace GameOfGoose
 {
@@ -14,6 +13,7 @@ namespace GameOfGoose
         private int shift;
         private string headText;
         private string shiftText;
+        private String someoneInPrision;
 
         public Game(IBoard board, Player[] players, IDice dice, IPrint print)
         {
@@ -21,6 +21,7 @@ namespace GameOfGoose
             this.dice = dice;
             this.board = board;
             this.print = print;
+            this.someoneInPrision = string.Empty;
         }
 
         public void Play()
@@ -38,7 +39,7 @@ namespace GameOfGoose
                 foreach (var player in players)
                 {
                     if (shift == 1)
-                        headText += $"\t{player.Name}";
+                        headText += $"\t{player.Name}\t";
 
                     Turn(player);
 
@@ -53,7 +54,7 @@ namespace GameOfGoose
 
                 if (shift == 1)
                     print.Print($"{headText}");
-                
+
                 print.Print($"TURN {shift}");
                 print.Print($"{shiftText}");
             }
@@ -63,25 +64,31 @@ namespace GameOfGoose
         {
             int roll = dice.Roll();
             int roll2 = dice.Roll();
-            int newPosicion;
+            int newPosicion = player.Position + (roll + roll2);
 
-            if (player.TurnsToSkip == 0)
+            if (shift == 1)
             {
-                newPosicion = player.Position + (roll + roll2);
-                newPosicion = CheckPosition(newPosicion);
+                player.MoveTo(newPosicion);
 
+                IRules actionFirst = new FirstThrow(roll, roll2);
+                actionFirst.ValidateRule(player);
+                shiftText += $"\t{roll} + {roll2}: S{player.Position}";
+            }
+            else if (player.TurnsToSkip == 0)
+            {
+                newPosicion = CheckPosition(newPosicion);
                 player.MoveTo(newPosicion);
 
                 IRules action = this.board.GetBoardAction(newPosicion);
 
-                action.ValidateRule(player);
+                action.ValidateRule(player);//TODO Validate 63 position
 
                 if (player.Position != newPosicion)
                 {
                     shiftText += $"\t{roll} + {roll2}: S{player.LastPosition} -> S{player.Position}";
 
                     if (player.TurnsToSkip != 0)
-                        validateTurn(player, newPosicion);                   
+                        validateTurn(player, newPosicion);
                 }
                 else
                     shiftText += $"\t{roll} + {roll2}: S{player.Position}";
@@ -90,7 +97,6 @@ namespace GameOfGoose
             {
                 newPosicion = player.Position;
                 IRules action = this.board.GetBoardAction(newPosicion);
-
                 action.ValidateRule(player);
                 shiftText += $"\t/ : S{player.Position}\t";
             }

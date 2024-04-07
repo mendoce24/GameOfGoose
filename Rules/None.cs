@@ -1,10 +1,11 @@
-﻿namespace GameOfGoose.Rules
+﻿using GameOfGoose.Board;
+
+namespace GameOfGoose.Rules
 {
     internal class None: IRules
     {
         public void ValidateRule(Player player)
         {
-            
         }
     }
 }

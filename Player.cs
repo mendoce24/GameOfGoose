@@ -7,6 +7,7 @@ namespace GameOfGoose
         public int LastPosition { get; private set; }
         public int Position { get; private set; }//ToDo Private
         public int TurnsToSkip { get; private set; }
+        public bool InPrisoning { get; private set; }
         //public int[] DiceTurn { get; set; }
 
         public Player(string name) {
@@ -26,5 +27,9 @@ namespace GameOfGoose
             TurnsToSkip = numberOfTurns;
         }
 
+        public void InPrision(bool numberOfTurns)
+        {
+            InPrisoning = numberOfTurns;
+        }
     }
 }
