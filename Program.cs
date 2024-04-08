@@ -1,4 +1,6 @@
 ﻿using GameOfGoose.Board;
+using GameOfGoose.Dice;
+using GameOfGoose.Factories;
 using GameOfGoose.Print;
 
 namespace GameOfGoose
@@ -14,11 +16,12 @@ namespace GameOfGoose
                 new Player("PIECE 4")*/
             };
 
-            IDice dice = new Dice();
-            IBoard boqrdGame = new BoardGoose();
+            IDice dice = new Dice.Dice();
+            IRuleFactory factory = new RuleFactory();   
+            IBoard boardGame = new BoardGoose(factory);
             IPrint print = new PrintInConsole();
 
-            Game game = new Game(boqrdGame, players, dice, print) ;
+            Game game = new Game(boardGame, players, dice, print) ;
             game.Play();
         }
     }

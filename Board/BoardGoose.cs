@@ -1,37 +1,60 @@
-﻿using GameOfGoose.Rules;
+﻿using GameOfGoose.Factories;
+using GameOfGoose.Rules;
 
 namespace GameOfGoose.Board
 {
     public class BoardGoose : IBoard
     {
-        private readonly int _FinalPosition = 63;
-        public int FinalPosition() => _FinalPosition;
+        public int[] geese = { 5, 9, 14, 18, 23, 32, 36, 41, 45, 50, 54, 59 };
 
-        private readonly Dictionary<int, IRules> _board = new Dictionary<int, IRules>
+        private readonly List<IRules> _rules;
+        private IRuleFactory _ruleFactory;
+
+        public BoardGoose(IRuleFactory ruleFactory)
         {
-            {6, new Bridge()},
-            {19,new Inn()},
-            {31, new Well()},
-            {42, new Maze()},
-            {52, new Prison()},
-            {58, new Death()},
-            {5, new Goose()},
-            {9, new Goose()},
-            {14, new Goose()},
-            {18, new Goose()},
-            {23, new Goose()},
-            {32, new Goose()},
-            {36, new Goose()},
-            {41, new Goose()},
-            {45, new Goose()},
-            {50, new Goose()},
-            {54, new Goose()},
-            {59, new Goose()}
-        };
+            _ruleFactory = ruleFactory;
+            _rules = CreateBoard();
+        }
+
+        public int FinalPosition => _rules.Count;
+
+        public int CheckPosition(int position)
+        {
+            return (position > FinalPosition) ? FinalPosition - (position - FinalPosition) : position;
+        }
 
         public IRules GetBoardAction(int position)
         {
-            return _board.ContainsKey(position) ? _board[position] : new None();
+            return _rules[position];
+        }
+
+        private List<IRules> CreateBoard()
+        {
+            List<IRules> result = new List<IRules>();
+            for(int i = 0; i < FinalPosition; i++)
+            {
+                if(i == 6)
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.Bridge));
+                }
+                else if(i == 19) 
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.Inn));
+                }
+                // TODO: Add other Rules
+
+
+                else if(geese.Contains(i)) 
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.Goose));
+                }
+                else
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.None));
+                }
+            }
+
+            return result;
         }
     }
 }

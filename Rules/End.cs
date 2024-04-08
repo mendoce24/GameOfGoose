@@ -1,17 +1,18 @@
 ﻿namespace GameOfGoose.Rules
 {
-    public class Inn : IRules
+    internal class End : IRules
     {
         public int Position { get; set; }
 
-        public Inn(int position)
+        public End(int position)
         {
             Position = position;
         }
 
         public void ValidateRule(Player player)
         {
-            player.SetTurnsToSkip(1);
+            //TODO Validate 63 position
+            throw new NotImplementedException();
         }
     }
 }

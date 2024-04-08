@@ -2,7 +2,8 @@
 {
     public interface IBoard
     {
-        int FinalPosition();
+        int FinalPosition { get; }
+
         IRules GetBoardAction(int position);
     }
 }

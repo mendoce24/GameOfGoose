@@ -1,4 +1,4 @@
-﻿namespace GameOfGoose
+﻿namespace GameOfGoose.Dice
 {
     internal class Dice : IDice
     {

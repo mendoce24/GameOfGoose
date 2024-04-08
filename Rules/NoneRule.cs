@@ -1,17 +1,16 @@
 ﻿namespace GameOfGoose.Rules
 {
-    public class Inn : IRules
+    public class NoneRule : IRules
     {
         public int Position { get; set; }
 
-        public Inn(int position)
+        public NoneRule(int position)
         {
             Position = position;
         }
 
         public void ValidateRule(Player player)
         {
-            player.SetTurnsToSkip(1);
         }
     }
 }

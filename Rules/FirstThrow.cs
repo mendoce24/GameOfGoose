@@ -1,8 +1,9 @@
 ﻿
 namespace GameOfGoose.Rules
 {
-    public class FirstThrow : IRules
+    public class FirstThrow
     {
+        // TODO: This class is not an IRule -> It has no position
         private int rollDice1;
         private int rollDice2;
 
@@ -11,6 +12,8 @@ namespace GameOfGoose.Rules
             this.rollDice1 = rollDice1;
             this.rollDice2 = rollDice2;
         }
+
+        public int Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void ValidateRule(Player player)
         {
