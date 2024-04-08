@@ -29,7 +29,7 @@ namespace GameOfGoose
             shift = 0;
             headText = string.Empty;
 
-            print.Print("Game of Goose!");
+            print.Print("\t\tGAME OF GOOSE");
 
             while (true)
             {
@@ -41,24 +41,24 @@ namespace GameOfGoose
                     if (shift == 1)
                         headText += $"\t{player.Name}\t";
 
-                    //prison validation
-                    if (player.InWelling && ((this.someoneInWelling != string.Empty) && (this.someoneInWelling != player.Name)))
+                    //Well position  validation
+                    if (player.InWell && ((this.someoneInWelling != string.Empty) && (this.someoneInWelling != player.Name)))
                     {
                         this.someoneInWelling = player.Name;
-                        player.SkipTurn(0);
+                        player.SetTurnsToSkip(0);
                     }
 
                     Turn(player);
 
-                    //prison validation
-                    if (player.InWelling)
+                    //Well position validation
+                    if (player.InWell)
                         this.someoneInWelling = player.Name;
 
                     if (player.Position == board.FinalPosition())
                     {
                         print.Print($"TURN {shift}");
                         print.Print($"{shiftText}");
-                        print.Print($"{player.Name} wins!");
+                        print.Print($"{player.Name} WINNER!!!");
                         return;
                     }
                 }
@@ -75,9 +75,10 @@ namespace GameOfGoose
         {
             int roll = dice.Roll();
             int roll2 = dice.Roll();
+
             int newPosicion = player.Position + (roll + roll2);
 
-            if (shift == 1)
+            if (shift == 1)// Shift 1 game flow
             {
                 player.MoveTo(newPosicion);
 
@@ -85,26 +86,33 @@ namespace GameOfGoose
                 actionFirst.ValidateRule(player);
                 shiftText += $"\t{roll} + {roll2}: S{player.Position}";
             }
-            else if (player.TurnsToSkip == 0)
+            else if (player.TurnsToSkip == 0) // Normal game flow
             {
+                //checking that the position is not bigger than 63
                 newPosicion = CheckPosition(newPosicion);
+                //moving the position of the player
                 player.MoveTo(newPosicion);
 
+                //Getting the rule of the box position
                 IRules action = this.board.GetBoardAction(newPosicion);
 
+                //trigger the action in the box position
                 action.ValidateRule(player);//TODO Validate 63 position
 
+                //Printing
                 if (player.Position != newPosicion)
                 {
                     shiftText += $"\t{roll} + {roll2}: S{player.LastPosition} -> S{player.Position}";
 
+                    //validating if the position change with the validation of the box
                     if (player.TurnsToSkip != 0)
+                        //Validating the new position
                         validateTurn(player, newPosicion);
                 }
                 else
                     shiftText += $"\t{roll} + {roll2}: S{player.Position}";
             }
-            else
+            else// Flow with Turn Skiped
             {
                 newPosicion = player.Position;
                 IRules action = this.board.GetBoardAction(newPosicion);

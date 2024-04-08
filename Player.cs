@@ -7,7 +7,7 @@ namespace GameOfGoose
         public int LastPosition { get; private set; }
         public int Position { get; private set; }
         public int TurnsToSkip { get; private set; }
-        public bool InWelling { get; private set; }
+        public bool InWell { get; set; }
 
         public Player(string name) {
             Name = name;
@@ -20,14 +20,11 @@ namespace GameOfGoose
             Position = destination;
         }
 
-        public void SkipTurn(int numberOfTurns)
+        public void SetTurnsToSkip(int numberOfTurns)
         {
             TurnsToSkip = numberOfTurns;
         }
 
-        public void InWell(bool numberOfTurns)
-        {
-            InWelling = numberOfTurns;
-        }
+       
     }
 }

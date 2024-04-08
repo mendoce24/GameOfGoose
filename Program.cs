@@ -9,8 +9,9 @@ namespace GameOfGoose
         {
             Player[] players = {
                 new Player("PIECE 1"),
-                new Player("PIECE 2"),
-                new Player("PIECE 3")
+                new Player("PIECE 2")/*,
+                new Player("PIECE 3"),
+                new Player("PIECE 4")*/
             };
 
             IDice dice = new Dice();

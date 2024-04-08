@@ -5,7 +5,7 @@
         public void ValidateRule(Player player)
         {
             int valueToMove = (player.Position - player.LastPosition)   + player.Position;
-            player.MoveTo(valueToMove);//TODO validate position greater then 63
+            player.MoveTo(valueToMove);//TODO validate position greater than 63
         }
     }
 }
