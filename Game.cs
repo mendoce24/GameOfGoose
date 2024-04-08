@@ -13,7 +13,7 @@ namespace GameOfGoose
         private int shift;
         private string headText;
         private string shiftText;
-        private String someoneInPrision;
+        private String someoneInWelling;
 
         public Game(IBoard board, Player[] players, IDice dice, IPrint print)
         {
@@ -21,7 +21,7 @@ namespace GameOfGoose
             this.dice = dice;
             this.board = board;
             this.print = print;
-            this.someoneInPrision = string.Empty;
+            this.someoneInWelling = string.Empty;
         }
 
         public void Play()
@@ -41,7 +41,18 @@ namespace GameOfGoose
                     if (shift == 1)
                         headText += $"\t{player.Name}\t";
 
+                    //prison validation
+                    if (player.InWelling && ((this.someoneInWelling != string.Empty) && (this.someoneInWelling != player.Name)))
+                    {
+                        this.someoneInWelling = player.Name;
+                        player.SkipTurn(0);
+                    }
+
                     Turn(player);
+
+                    //prison validation
+                    if (player.InWelling)
+                        this.someoneInWelling = player.Name;
 
                     if (player.Position == board.FinalPosition())
                     {

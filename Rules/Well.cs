@@ -5,7 +5,7 @@ namespace GameOfGoose.Rules
     {
         public void ValidateRule(Player player)
         {
-            player.InPrision(true);
+            player.InWell(true);
             player.SkipTurn(1); // TODO: Stuck unless other player enters
         }
     }

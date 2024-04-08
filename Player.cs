@@ -5,15 +5,13 @@ namespace GameOfGoose
     {
         public string Name { get; private set; }
         public int LastPosition { get; private set; }
-        public int Position { get; private set; }//ToDo Private
+        public int Position { get; private set; }
         public int TurnsToSkip { get; private set; }
-        public bool InPrisoning { get; private set; }
-        //public int[] DiceTurn { get; set; }
+        public bool InWelling { get; private set; }
 
         public Player(string name) {
             Name = name;
             Position = 0;
-            //DiceTurn = new int[];
         }
 
         public void MoveTo(int destination)
@@ -27,9 +25,9 @@ namespace GameOfGoose
             TurnsToSkip = numberOfTurns;
         }
 
-        public void InPrision(bool numberOfTurns)
+        public void InWell(bool numberOfTurns)
         {
-            InPrisoning = numberOfTurns;
+            InWelling = numberOfTurns;
         }
     }
 }
