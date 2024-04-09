@@ -1,45 +1,44 @@
-﻿using GameOfGoose.Dice;
+﻿
+using GameOfGoose.Board;
 using System.Numerics;
 
 namespace GameOfGoose
 {
     public class Player
     {
+        private BoardGoose _board;
+
         public string Name { get; private set; }
         public int LastPosition { get; private set; }
         public int Position { get; private set; }
         public int TurnsToSkip { get; private set; }
         public bool InWell { get; set; }
+        public bool Winner { get; set; }
 
         public Player(string name)
         {
             Name = name;
             Position = 0;
+            _board = BoardGoose.Instance;
+            Winner = false;
         }
 
         public void Move(int[] dice)
         {
             int destination = Position + dice.Sum();
 
-            // TODO: is the player over the last square?
-            if (true) // Calculate overshot
-            {
-                MoveTo(destination);
-            }
-            else
-            {
-                // MoveBack
-            }
+            destination = _board.CheckPosition(destination);
 
-
+            MoveTo(destination);
+            IRules action = _board.GetBoardAction(Position);
+            action.ValidateRule(this);
         }
 
         public void MoveTo(int destination)
         {
             LastPosition = Position;
             Position = destination;
-
-           // TODO: Have player enter square and handle event
+            // *TODO: Have player enter square and handle event
         }
 
         public void SetTurnsToSkip(int numberOfTurns)
@@ -47,9 +46,12 @@ namespace GameOfGoose
             TurnsToSkip = numberOfTurns;
         }
 
-        internal void SkipTurn()
+        public void SkipTurn()
         {
-            throw new NotImplementedException();
+            if(TurnsToSkip > 0)
+            {
+                SetTurnsToSkip(TurnsToSkip - 1);
+            }
         }
     }
 }

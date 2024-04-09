@@ -11,8 +11,7 @@
 
         public void ValidateRule(Player player)
         {
-            //TODO Validate 63 position
-            throw new NotImplementedException();
+            player.Winner = true;
         }
     }
 }

@@ -1,17 +1,17 @@
 ﻿namespace GameOfGoose.Dice
 {
-    internal class Dice : IDice
+    public class Dice : IDice
     {
-        private Random random;
+        private readonly Random _random;
 
         public Dice()
         {
-            random = new Random();
+            _random = new Random();
         }
 
         public int Roll()
         {
-            return random.Next(1, 7);
+            return _random.Next(1, 7);
         }
     }
 }

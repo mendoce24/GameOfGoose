@@ -1,26 +1,41 @@
 ﻿using GameOfGoose.Factories;
-using GameOfGoose.Rules;
 
 namespace GameOfGoose.Board
 {
-    public class BoardGoose : IBoard
+    public sealed class BoardGoose : IBoard
     {
-        public int[] geese = { 5, 9, 14, 18, 23, 32, 36, 41, 45, 50, 54, 59 };
+        private static BoardGoose instance = null;
 
+        private readonly int[] _geese = [5, 9, 14, 18, 23, 27, 32, 36, 41, 45, 50, 54, 59];
         private readonly List<IRules> _rules;
-        private IRuleFactory _ruleFactory;
+        private readonly IRuleFactory _ruleFactory;
 
-        public BoardGoose(IRuleFactory ruleFactory)
+        // TODO: Make this class Singleton
+        // So another class can go like _board.GetBoardAction(X) without having Boardgoose as a dependency(for now)
+        private BoardGoose()
         {
-            _ruleFactory = ruleFactory;
+            _ruleFactory = new RuleFactory();
             _rules = CreateBoard();
         }
 
-        public int FinalPosition => _rules.Count;
+        public static BoardGoose Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new BoardGoose();
+                }
+                return instance;
+                
+            }
+        }
+
+        public int FinalPosition => _rules == null ? 63 : _rules.Count - 1;
 
         public int CheckPosition(int position)
         {
-            return (position > FinalPosition) ? FinalPosition - (position - FinalPosition) : position;
+            return (position > FinalPosition) ? (FinalPosition * 2 - position) : position;
         }
 
         public IRules GetBoardAction(int position)
@@ -31,20 +46,37 @@ namespace GameOfGoose.Board
         private List<IRules> CreateBoard()
         {
             List<IRules> result = new List<IRules>();
-            for(int i = 0; i < FinalPosition; i++)
+            for (int i = 0; i <= FinalPosition; i++)
             {
-                if(i == 6)
+                if (i == 6)
                 {
                     result.Add(_ruleFactory.CreateRule(i, RuleType.Bridge));
                 }
-                else if(i == 19) 
+                else if (i == 19)
                 {
                     result.Add(_ruleFactory.CreateRule(i, RuleType.Inn));
                 }
-                // TODO: Add other Rules
-
-
-                else if(geese.Contains(i)) 
+                else if (i == 31)
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.Well));
+                }
+                else if (i == 42)
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.Maze));
+                }
+                else if (i == 52)
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.Prison));
+                }
+                else if (i == 58)
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.Death));
+                }
+                else if (i == 63)
+                {
+                    result.Add(_ruleFactory.CreateRule(i, RuleType.End));
+                }
+                else if (_geese.Contains(i))
                 {
                     result.Add(_ruleFactory.CreateRule(i, RuleType.Goose));
                 }

@@ -1,13 +1,12 @@
 ﻿using GameOfGoose.Board;
 using GameOfGoose.Dice;
-using GameOfGoose.Factories;
 using GameOfGoose.Print;
 
 namespace GameOfGoose
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             Player[] players = {
                 new Player("PIECE 1"),
@@ -16,12 +15,12 @@ namespace GameOfGoose
                 new Player("PIECE 4")*/
             };
 
+            // All dependencies go here
             IDice dice = new Dice.Dice();
-            IRuleFactory factory = new RuleFactory();   
-            IBoard boardGame = new BoardGoose(factory);
+            BoardGoose boardGame = BoardGoose.Instance;
             IPrint print = new PrintInConsole();
 
-            Game game = new Game(boardGame, players, dice, print) ;
+            Game game = new(players, dice, print);
             game.Play();
         }
     }
