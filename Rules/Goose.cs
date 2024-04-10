@@ -11,8 +11,17 @@
 
         public void ValidateRule(Player player)
         {
-            int valueToMove = (Position - player.Position) + Position;
-            player.MoveTo(valueToMove);// TODO 
+            int valueToMove = player.ValueDice * (player.InReverse ? -1 : 1);
+            /*if (player.InReverse)
+            {
+                valueToMove = Position - player.ValueDice;
+            }
+            else
+            {
+                valueToMove = (player.Position - player.LastPosition) + Position;
+            }
+            player.MoveTo(valueToMove);*/
+            player.Move(new int[] { valueToMove });
         }
     }
 }

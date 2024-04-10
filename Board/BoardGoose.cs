@@ -10,8 +10,6 @@ namespace GameOfGoose.Board
         private readonly List<IRules> _rules;
         private readonly IRuleFactory _ruleFactory;
 
-        // TODO: Make this class Singleton
-        // So another class can go like _board.GetBoardAction(X) without having Boardgoose as a dependency(for now)
         private BoardGoose()
         {
             _ruleFactory = new RuleFactory();
@@ -27,16 +25,10 @@ namespace GameOfGoose.Board
                     instance = new BoardGoose();
                 }
                 return instance;
-                
             }
         }
 
         public int FinalPosition => _rules == null ? 63 : _rules.Count - 1;
-
-        public int CheckPosition(int position)
-        {
-            return (position > FinalPosition) ? (FinalPosition * 2 - position) : position;
-        }
 
         public IRules GetBoardAction(int position)
         {
@@ -45,7 +37,7 @@ namespace GameOfGoose.Board
 
         private List<IRules> CreateBoard()
         {
-            List<IRules> result = new List<IRules>();
+            List<IRules> result = [];
             for (int i = 0; i <= FinalPosition; i++)
             {
                 if (i == 6)

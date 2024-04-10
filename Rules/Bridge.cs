@@ -1,5 +1,4 @@
-﻿
-namespace GameOfGoose.Rules
+﻿namespace GameOfGoose.Rules
 {
     public class Bridge : IRules
     {

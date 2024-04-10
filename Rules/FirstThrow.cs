@@ -1,7 +1,6 @@
-﻿
-namespace GameOfGoose.Rules
+﻿namespace GameOfGoose.Rules
 {
-    public class FirstThrow
+    public class FirstThrow : IRuleValidation
     {
         // TODO: This class is not an IRule -> It has no position
         private int[] _dices;
@@ -10,8 +9,6 @@ namespace GameOfGoose.Rules
         {
             _dices = dices;
         }
-
-        public int Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void ValidateRule(Player player)
         {
@@ -22,6 +19,10 @@ namespace GameOfGoose.Rules
             else if (_dices.OrderBy(x => x).SequenceEqual(new[] { 3, 6 }))
             {
                 player.MoveTo(53);
+            }
+            else
+            {
+                player.Move(_dices);
             }
         }
     }

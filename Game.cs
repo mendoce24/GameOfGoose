@@ -2,75 +2,56 @@
 using GameOfGoose.Dice;
 using GameOfGoose.Print;
 using GameOfGoose.Rules;
-using System.Security.Cryptography.X509Certificates;
 
 namespace GameOfGoose
 {
     public class Game
     {
-        private readonly IBoard _board;
         private readonly Player[] _players;
         private readonly IDice _dice;
         private readonly IPrint _print;
+        private readonly PrintFormat _format;
 
         private int _turn;
-        private string _headText;
-        private string _turnText;
         private string _playerInWell;
 
-        public Game(Player[] players, IDice dice, IPrint print)
+        public Game(Player[] players, IDice dice, IPrint print, PrintFormat format)
         {
             _players = players;
             _dice = dice;
-            _board = BoardGoose.Instance;
             _print = print;
-            _headText = string.Empty;
-            _turnText = string.Empty;
             _playerInWell = string.Empty;
+            _format = format;
         }
 
         public void Play()
         {
-            //TODO
             _turn = 0;
-            _headText = string.Empty;
+            string turnText;
+            bool gameFinishes = false;
 
-            _print.Print("\t\tGAME OF GOOSE");
+            _print.Print(_format.HeaderGame(_players));
 
-            while (true)
+            while (!gameFinishes)
             {
                 _turn++;
-                _turnText = string.Empty;
-
-                foreach (var player in _players)
+                turnText = string.Empty;
+                foreach (Player player in _players)
                 {
-                    if (_turn == 1)
-                    {
-                        _headText += $"\t{player.Name}\t";
-                    }
-
                     ValidateWellExit(player);
-
-                    PlayTurn(player);
-
+                    turnText += PlayTurn(player);
                     ValidateWellEntry(player);
-
-                    if (player.Winner)
-                    {
-                        _print.Print($"TURN {_turn}");
-                        _print.Print($"{_turnText}");
-                        _print.Print($"{player.Name} WINNER!!!");
-                        return;
-                    }
-                }
-
-                if (_turn == 1)
-                {
-                    _print.Print($"{_headText}");
                 }
 
                 _print.Print($"TURN {_turn}");
-                _print.Print($"{_turnText}");
+                _print.Print(turnText);
+
+                if (_players.FirstOrDefault(p => p.Winner) != null)
+                {
+                    turnText = _format.WinnerGame(_players);
+                    _print.Print(turnText);
+                    gameFinishes = true;
+                }
             }
         }
 
@@ -86,45 +67,33 @@ namespace GameOfGoose
             return result;
         }
 
-        private void PlayTurn(Player player)
+        private string PlayTurn(Player player)
         {
+            string turnText;
             int[] dices = RollTheDice();
 
-            if (player.TurnsToSkip == 0)// Normal game flow
+            if (player.TurnsToSkip > 0 || player.InWell)
             {
-                player.Move(dices);
-                WriteMessage(player, dices);
+                player.SkipTurn();
+                turnText = _format.SkipedTurn();
             }
             else if (_turn == 1) // 1st turn game flow
             {
                 HandleFirstTurn(player, dices);
+                turnText = _format.NormalTurn(player, dices);
             }
-            else
+            else // Normal game flow
             {
-                player.SkipTurn();
-                WriteMessage(player, dices, "\t/\t");
+                player.Move(dices);
+                turnText = _format.NormalTurn(player, dices);
             }
+            return turnText;
         }
 
         private void HandleFirstTurn(Player player, int[] dices)
         {
-            var actionFirst = new FirstThrow(dices);
+            FirstThrow actionFirst = new FirstThrow(dices);
             actionFirst.ValidateRule(player);
-
-            _turnText += $"\t{dices[0]} + {dices[1]}:\tS{player.Position}\t";
-        }
-
-        private void WriteMessage(Player player, int[] dices, string msg = "")
-        {
-            //TODO: Printing should be in seperate class
-            if (msg.Length > 0)
-            {
-                _turnText += msg;
-            }
-            else
-            { 
-                _turnText += $"\t{dices[0]} + {dices[1]}: S{player.LastPosition} -> S{player.Position}"; 
-            }            
         }
 
         private void ValidateWellEntry(Player player)

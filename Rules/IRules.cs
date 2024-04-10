@@ -1,10 +1,9 @@
-﻿
+﻿using GameOfGoose.Rules;
+
 namespace GameOfGoose
 {
-    public interface IRules
+    public interface IRules : IRuleValidation
     {
         public int Position { get; set; }
-
-        void ValidateRule(Player player);
     }
 }

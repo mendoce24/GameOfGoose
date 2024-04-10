@@ -1,6 +1,4 @@
-﻿
-using GameOfGoose.Board;
-using System.Numerics;
+﻿using GameOfGoose.Board;
 
 namespace GameOfGoose
 {
@@ -14,6 +12,8 @@ namespace GameOfGoose
         public int TurnsToSkip { get; private set; }
         public bool InWell { get; set; }
         public bool Winner { get; set; }
+        public bool InReverse { get; set; }
+        public int ValueDice { get; set; }
 
         public Player(string name)
         {
@@ -21,13 +21,14 @@ namespace GameOfGoose
             Position = 0;
             _board = BoardGoose.Instance;
             Winner = false;
+            InReverse = false;
+            ValueDice = 0;
         }
 
         public void Move(int[] dice)
         {
-            int destination = Position + dice.Sum();
-
-            destination = _board.CheckPosition(destination);
+            ValueDice = dice.Sum();
+            int destination = Position + ValueDice;
 
             MoveTo(destination);
             IRules action = _board.GetBoardAction(Position);
@@ -37,8 +38,7 @@ namespace GameOfGoose
         public void MoveTo(int destination)
         {
             LastPosition = Position;
-            Position = destination;
-            // *TODO: Have player enter square and handle event
+            Position = CheckNotOverstepFinalPosition(destination);
         }
 
         public void SetTurnsToSkip(int numberOfTurns)
@@ -48,10 +48,22 @@ namespace GameOfGoose
 
         public void SkipTurn()
         {
-            if(TurnsToSkip > 0)
+            if (TurnsToSkip > 0)
             {
                 SetTurnsToSkip(TurnsToSkip - 1);
             }
+        }
+
+        public int CheckNotOverstepFinalPosition(int position)
+        {
+            InReverse = false;
+            if (position > _board.FinalPosition)
+            {
+                InReverse = true;
+                position = _board.FinalPosition * 2 - position;
+            }
+
+            return position;
         }
     }
 }
