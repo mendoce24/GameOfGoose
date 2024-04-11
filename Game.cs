@@ -1,5 +1,4 @@
-﻿using GameOfGoose.Board;
-using GameOfGoose.Dice;
+﻿using GameOfGoose.Dice;
 using GameOfGoose.Print;
 using GameOfGoose.Rules;
 
@@ -13,14 +12,12 @@ namespace GameOfGoose
         private readonly PrintFormat _format;
 
         private int _turn;
-        private string _playerInWell;
 
         public Game(Player[] players, IDice dice, IPrint print, PrintFormat format)
         {
             _players = players;
             _dice = dice;
             _print = print;
-            _playerInWell = string.Empty;
             _format = format;
         }
 
@@ -38,9 +35,9 @@ namespace GameOfGoose
                 turnText = string.Empty;
                 foreach (Player player in _players)
                 {
-                    ValidateWellExit(player);
+                    player.ValidateWellExit(_players);
                     turnText += PlayTurn(player);
-                    ValidateWellEntry(player);
+                    //ValidateWellEntry(player);
                 }
 
                 _print.Print($"TURN {_turn}");
@@ -94,22 +91,6 @@ namespace GameOfGoose
         {
             FirstThrow actionFirst = new FirstThrow(dices);
             actionFirst.ValidateRule(player);
-        }
-
-        private void ValidateWellEntry(Player player)
-        {
-            if (player.InWell)
-            {
-                _playerInWell = player.Name;
-            }
-        }
-
-        private void ValidateWellExit(Player player)
-        {
-            if (player.InWell && _playerInWell != string.Empty && _playerInWell != player.Name)
-            {
-                player.InWell = false;
-            }
         }
     }
 }

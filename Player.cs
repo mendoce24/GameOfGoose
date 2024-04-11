@@ -65,5 +65,13 @@ namespace GameOfGoose
 
             return position;
         }
+
+        public void ValidateWellExit(Player[] players)
+        {
+            if (players.FirstOrDefault(p => p.InWell && p.Name != Name) != null)
+            {
+                InWell = false;
+            }
+        }
     }
 }
