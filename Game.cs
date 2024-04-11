@@ -24,31 +24,44 @@ namespace GameOfGoose
         public void Play()
         {
             _turn = 0;
-            string turnText;
-            bool gameFinishes = false;
-
             _print.Print(_format.HeaderGame(_players));
 
-            while (!gameFinishes)
+            while (!IsGameFinished())
             {
                 _turn++;
-                turnText = string.Empty;
-                foreach (Player player in _players)
-                {
-                    player.ValidateWellExit(_players);
-                    turnText += PlayTurn(player);
-                    //ValidateWellEntry(player);
-                }
+                RunPlayTurn();
+                DisplayTurnInfo();
+            }
+        }
 
-                _print.Print($"TURN {_turn}");
-                _print.Print(turnText);
+        private void RunPlayTurn()
+        {
+            foreach (Player player in _players)
+            {
+                int[] dices = RollTheDice();
 
-                if (_players.FirstOrDefault(p => p.Winner) != null)
-                {
-                    turnText = _format.WinnerGame(_players);
-                    _print.Print(turnText);
-                    gameFinishes = true;
-                }
+                player.ValidateWellExit(_players);
+                PlayTurn(player, dices);
+            }
+        }
+       
+
+        public void PlayTurn(Player player, int[] dices)
+        {
+            if (player.TurnsToSkip > 0 || player.InWell)
+            {
+                player.SkipTurn();
+                player.TextTrun = _format.SkipedTurn();
+            }
+            else if (_turn == 1) // 1st turn game flow
+            {
+                HandleFirstTurn(player, dices);
+                player.TextTrun = _format.NormalTurn(player, dices);
+            }
+            else // Normal game flow
+            {
+                player.Move(dices);
+                player.TextTrun = _format.NormalTurn(player, dices);
             }
         }
 
@@ -64,33 +77,26 @@ namespace GameOfGoose
             return result;
         }
 
-        private string PlayTurn(Player player)
-        {
-            string turnText;
-            int[] dices = RollTheDice();
-
-            if (player.TurnsToSkip > 0 || player.InWell)
-            {
-                player.SkipTurn();
-                turnText = _format.SkipedTurn();
-            }
-            else if (_turn == 1) // 1st turn game flow
-            {
-                HandleFirstTurn(player, dices);
-                turnText = _format.NormalTurn(player, dices);
-            }
-            else // Normal game flow
-            {
-                player.Move(dices);
-                turnText = _format.NormalTurn(player, dices);
-            }
-            return turnText;
-        }
-
         private void HandleFirstTurn(Player player, int[] dices)
         {
             FirstThrow actionFirst = new FirstThrow(dices);
             actionFirst.ValidateRule(player);
+        }
+
+        private bool IsGameFinished() => _players.Any(p => p.Winner);
+
+        private void DisplayTurnInfo()
+        {
+            string turnText = string.Join("", _players.Select(p => p.TextTrun));
+
+            _print.Print($"TURN {_turn}");
+            _print.Print(turnText);
+
+            if (IsGameFinished())
+            {
+                string winnerTurnText = _format.WinnerGame(_players);
+                _print.Print(winnerTurnText);
+            }
         }
     }
 }

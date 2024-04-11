@@ -14,6 +14,7 @@ namespace GameOfGoose
         public bool Winner { get; set; }
         public bool InReverse { get; set; }
         public int ValueDice { get; set; }
+        public string TextTrun { get; set; }
 
         public Player(string name)
         {
