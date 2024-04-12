@@ -4,7 +4,7 @@ namespace GameOfGoose.Board
 {
     public sealed class BoardGoose : IBoard
     {
-        private static BoardGoose instance = null;
+        private static BoardGoose? instance = null;
 
         private readonly int[] _geese = [5, 9, 14, 18, 23, 27, 32, 36, 41, 45, 50, 54, 59];
         private readonly List<IRules> _rules;
