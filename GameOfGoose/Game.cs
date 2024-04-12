@@ -51,17 +51,17 @@ namespace GameOfGoose
             if (player.TurnsToSkip > 0 || player.InWell)
             {
                 player.SkipTurn();
-                player.TextTrun = _format.SkipedTurn();
+                player.TextTurn = _format.SkipedTurn();
             }
             else if (_turn == 1) // 1st turn game flow
             {
                 HandleFirstTurn(player, dices);
-                player.TextTrun = _format.NormalTurn(player, dices);
+                player.TextTurn = _format.NormalTurn(player, dices);
             }
             else // Normal game flow
             {
                 player.Move(dices);
-                player.TextTrun = _format.NormalTurn(player, dices);
+                player.TextTurn = _format.NormalTurn(player, dices);
             }
         }
 
@@ -87,7 +87,7 @@ namespace GameOfGoose
 
         private void DisplayTurnInfo()
         {
-            string turnText = string.Join("", _players.Select(p => p.TextTrun));
+            string turnText = string.Join("", _players.Select(p => p.TextTurn));
 
             _print.Print($"TURN {_turn}");
             _print.Print(turnText);

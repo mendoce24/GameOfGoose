@@ -14,7 +14,7 @@ namespace GameOfGoose
         public bool Winner { get; set; }
         public bool InReverse { get; set; }
         public int ValueDice { get; set; }
-        public string TextTrun { get; set; }
+        public string TextTurn { get; set; }
 
         public Player(string name)
         {
@@ -24,6 +24,7 @@ namespace GameOfGoose
             Winner = false;
             InReverse = false;
             ValueDice = 0;
+            TextTurn = String.Empty;
         }
 
         public void Move(int[] dice)
