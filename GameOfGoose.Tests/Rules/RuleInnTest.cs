@@ -1,23 +1,24 @@
-﻿using GameOfGoose.Rules;
+﻿using GameOfGoose.Business;
+using GameOfGoose.Business.Factories;
+using GameOfGoose.Business.Rules;
 
-namespace GameOfGoose.Tests.Rules
+namespace GameOfGoose.Tests.Rules;
+
+public class RuleInnTest
 {
-    public class RuleInnTest
+    [Fact]
+    public void IfSquareIs_19_ThenPlayerHaveToSkip_1_turn()
     {
-        [Fact]
-        public void IfSquareIs_19_ThenPlayerHaveToSkip_1_turn()
-        {
-            //Arrange
-            int destination = 19;
-            Player player = new Player("N");
-            IRules ruleInn = new Inn(destination);
+        //Arrange
+        int destination = 19;
+        Player player = TestHelper.GetMockPlayer();
+        IRules ruleInn = TestHelper.GetRuleFactory().CreateRule(destination, RuleType.Inn);
 
-            //Act
-            player.MoveTo(destination);
-            ruleInn.ValidateRule(player);
+        //Act
+        player.MoveTo(destination);
+        ruleInn.ValidateRule(player);
 
-            //Assert
-            Assert.Equal(1, player.TurnsToSkip);
-        }
+        //Assert
+        Assert.Equal(1, player.TurnsToSkip);
     }
 }

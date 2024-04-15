@@ -1,51 +1,51 @@
-﻿using GameOfGoose.Factories;
-using GameOfGoose.Rules;
+﻿using GameOfGoose.Business;
+using GameOfGoose.Business.Factories;
+using GameOfGoose.Business.Rules;
 
-namespace GameOfGoose.Tests.Rules
+namespace GameOfGoose.Tests.Rules;
+
+public class MoveToRulesTests
 {
-    public class MoveToRulesTests
+    [Fact]
+    public void IfPlayerLandsOnBridge_ThenHeShouldMoveToSquare12()
     {
-        [Fact]
-        public void IfPlayerLandsOnBridge_ThenHeShouldMoveToSquare12()
-        {
-            // Arrange
-            Player player = new Player("N");
-            IRules ruleBridge = new RuleFactory().CreateRule(6, RuleType.Bridge);
+        // Arrange
+        Player player = TestHelper.GetMockPlayer();
+        IRules ruleBridge = TestHelper.GetRuleFactory().CreateRule(6, RuleType.Bridge);
 
-            // Act
-            ruleBridge.ValidateRule(player);
+        // Act
+        ruleBridge.ValidateRule(player);
 
-            // Assert
-            Assert.Equal(12, player.Position);
-            Assert.NotEqual(6, player.Position); // Tip: Unhappy path is also worth testing
-        }
+        // Assert
+        Assert.Equal(12, player.Position);
+        Assert.NotEqual(6, player.Position); // Tip: Unhappy path is also worth testing
+    }
 
-        [Fact]
-        public void IfPlayerEnterMaze_ThenPlayerHasToMoveToSquare_39()
-        {
-            //Arrange
-            Player player = new Player("N");
-            IRules ruleMaze = new Maze(42);
+    [Fact]
+    public void IfPlayerEnterMaze_ThenPlayerHasToMoveToSquare_39()
+    {
+        //Arrange
+        Player player = TestHelper.GetMockPlayer();
+        IRules ruleMaze = TestHelper.GetRuleFactory().CreateRule(42, RuleType.Maze);
 
-            //Act
-            ruleMaze.ValidateRule(player);
+        //Act
+        ruleMaze.ValidateRule(player);
 
-            //Assert
-            Assert.Equal(39, player.Position);
-        }
+        //Assert
+        Assert.Equal(39, player.Position);
+    }
 
-        [Fact]
-        public void IfPlayerEnterDeath_ThenPlayerHasToMoveToSquare_0()
-        {
-            //Arrange
-            Player player = new Player("N");
-            IRules ruleDeath = new Death(58);
+    [Fact]
+    public void IfPlayerEnterDeath_ThenPlayerHasToMoveToSquare_0()
+    {
+        //Arrange
+        Player player = TestHelper.GetMockPlayer();
+        IRules ruleDeath = TestHelper.GetRuleFactory().CreateRule(58, RuleType.Death);
 
-            //Act
-            ruleDeath.ValidateRule(player);
+        //Act
+        ruleDeath.ValidateRule(player);
 
-            //Assert
-            Assert.Equal(0, player.Position);
-        }
+        //Assert
+        Assert.Equal(0, player.Position);
     }
 }

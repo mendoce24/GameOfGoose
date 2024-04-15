@@ -1,21 +1,22 @@
-﻿namespace GameOfGoose.Tests
+﻿using GameOfGoose.Business.Dice;
+
+namespace GameOfGoose.Tests;
+
+public class DiceTest
 {
-    public class DiceTest
+    [Fact]
+    public void DiceMovesGenerateValuesBetween_1_6()
     {
-        [Fact]
-        public void DiceMovesGenerateValuesBetween_1_6()
-        {
-            //Arrange
-            int minValue = 1;
-            int maxValue = 6;
-            int rollValue;
-            Dice.Dice dice = new Dice.Dice();
+        //Arrange
+        int minValue = 1;
+        int maxValue = 6;
+        int rollValue;
+        Dice dice = new();
 
-            //Act
-            rollValue = dice.Roll();
+        //Act
+        rollValue = dice.Roll();
 
-            //Assert
-            Assert.InRange(rollValue, minValue, maxValue);
-        }
+        //Assert
+        Assert.InRange(rollValue, minValue, maxValue);
     }
 }

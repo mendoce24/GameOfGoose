@@ -1,71 +1,47 @@
-﻿using GameOfGoose.Rules;
+﻿using GameOfGoose.Business;
+using GameOfGoose.Business.Print;
+using GameOfGoose.Business.Rules;
+using Moq;
 
-namespace GameOfGoose.Tests.Rules
+namespace GameOfGoose.Tests.Rules;
+
+public class RuleFirstThrowTest
 {
-    public class RuleFirstThrowTest
+    [Theory]
+    [InlineData(5, 4)]
+    [InlineData(4, 5)]
+    public void IfFirstThrowAndDiceContain4And5_ThenPlayerHaveToMoveTo26(int dice1, int dice2)
     {
-        [Fact]
-        public void IfIsTheFirstTrowAndDice1Is_5_and_Dice2Is_4_ThenPlayerHaveToMoveTo_26()
-        {
-            //Arrange
-            int[] dices = { 5, 4 };
-            Player player = new Player("N");
-            var ruleFirstThrow = new FirstThrow(dices);
+        //Arrange
+        int[] dices = [dice1, dice2];
+        Player player = TestHelper.GetMockPlayer();
+        var mockPrint = new Mock<ILogger>();
+        var ruleFirstThrow = new FirstThrow(mockPrint.Object, dices);
 
-            //Act
-            player.MoveTo(dices.Sum());
-            ruleFirstThrow.ValidateRule(player);
+        //Act
+        player.MoveTo(dices.Sum());
+        ruleFirstThrow.ValidateRule(player);
 
-            //Assert
-            Assert.Equal(26, player.Position);
-        }
+        //Assert
+        Assert.Equal(26, player.Position);
+    }
 
-        [Fact]
-        public void IfIsTheFirstTrowAndDice1Is_4_and_Dice2Is_5_ThenPlayerHaveToMoveTo_26()
-        {
-            //Arrange
-            int[] dices = { 4, 5 };
-            Player player = new Player("N");
-            var ruleFirstThrow = new FirstThrow(dices);
+    [Theory]
+    [InlineData(6, 3)]
+    [InlineData(3, 6)]
+    public void IfFirstThrowAndDiceContain3And6_ThenPlayerHaveToMoveTo53(int dice1, int dice2)
+    {
+        //Arrange
+        int[] dices = [dice1, dice2];
+        Player player = TestHelper.GetMockPlayer();
+        var mockPrint = new Mock<ILogger>();
+        var ruleFirstThrow = new FirstThrow(mockPrint.Object, dices);
 
-            //Act
-            player.MoveTo(dices.Sum());
-            ruleFirstThrow.ValidateRule(player);
+        //Act
+        player.MoveTo(dices.Sum());
+        ruleFirstThrow.ValidateRule(player);
 
-            //Assert
-            Assert.Equal(26, player.Position);
-        }
-
-        [Fact]
-        public void IfIsTheFirstTrowAndDice1Is_6_and_Dice2Is_3_ThenPlayerHaveToMoveTo_53()
-        {
-            //Arrange
-            int[] dices = { 6, 3 };
-            Player player = new Player("N");
-            var ruleFirstThrow = new FirstThrow(dices);
-
-            //Act
-            player.MoveTo(dices.Sum());
-            ruleFirstThrow.ValidateRule(player);
-
-            //Assert
-            Assert.Equal(53, player.Position);
-        }
-
-        [Fact]
-        public void IfIsTheFirstTrowAndDice1Is_3_and_Dice2Is_6_ThenPlayerHaveToMoveTo_53()
-        {
-            //Arrange
-            int[] dices = { 3, 6 };
-            Player player = new Player("N");
-            var ruleFirstThrow = new FirstThrow(dices);
-
-            //Act
-            player.MoveTo(dices.Sum());
-            ruleFirstThrow.ValidateRule(player);
-
-            //Assert
-            Assert.Equal(53, player.Position);
-        }
+        //Assert
+        Assert.Equal(53, player.Position);
     }
 }

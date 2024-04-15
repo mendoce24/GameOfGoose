@@ -1,10 +1,12 @@
-﻿namespace GameOfGoose.Print
+﻿using GameOfGoose.Business.Print;
+
+namespace GameOfGoose.Print;
+
+public class PrintInConsole : ILogger
 {
-    public class PrintInConsole : IPrint
+    public void Log(string text)
     {
-        public void Print(string text)
-        {
-            Console.WriteLine(text);
-        }
+        Console.WriteLine(text);
     }
+
 }

@@ -1,28 +1,28 @@
-﻿using GameOfGoose.Board;
-using GameOfGoose.Dice;
-using GameOfGoose.Print;
+﻿using GameOfGoose.Business;
 
-namespace GameOfGoose
+namespace GameOfGoose;
+
+public class Program
 {
-    internal class Program
+    private static void Main()
     {
-        private static void Main()
+        var config = new Configuration();
+        Game game = config.StartGame();
+
+        Console.WriteLine("Game starting");
+
+        game.Play();
+
+        if (game.IsGameFinished())
         {
-            Player[] players = {
-                new Player("PIECE 1"),
-                new Player("PIECE 2"),
-                new Player("PIECE 3")/*,
-                new Player("PIECE 4")*/
-            };
-
-            // All dependencies go here
-            IDice dice = new Dice.Dice();
-            BoardGoose boardGame = BoardGoose.Instance;//Singleton implementation
-            IPrint print = new PrintInConsole();
-            PrintFormat forrmat = new PrintFormat();
-
-            Game game = new(players, dice, print, forrmat);
-            game.Play();
+            Player? winner = game.GetWinner();
+            if (winner != null)
+            {
+                Console.WriteLine($"Player {winner.Name} Won!");
+            }                
         }
+
+        Console.WriteLine("Game over!");
+        Console.ReadLine();
     }
 }
